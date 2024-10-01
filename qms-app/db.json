@@ -1,0 +1,65 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Admin User",
+      "email": "admin@test.com",
+      "password": "admin123",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "name": "Manager User",
+      "email": "manager@test.com",
+      "password": "manager123",
+      "role": "manager"
+    },
+    {
+      "id": "3",
+      "name": "Student User",
+      "email": "student@test.com",
+      "password": "student123",
+      "role": "student"
+    },
+    {
+      "id": "64f7",
+      "name": "Ali Ahsan",
+      "email": "syedali.ahsan7654321@gmail.com",
+      "phone": "03070406185",
+      "role": "student",
+      "password": "el8a1vmq"
+    },
+    {
+      "id": "338c",
+      "name": "Harron Sohail",
+      "email": "haroon@gmail.com",
+      "phone": "0923038580908",
+      "role": "student",
+      "password": "b4u5s8db"
+    },
+    {
+      "id": "4df6",
+      "name": "Mujhahid Nawaz",
+      "email": "mujahid@gmail.com",
+      "phone": "1234556757",
+      "role": "student",
+      "password": "po0vxhaf"
+    },
+    {
+      "id": "cb7d",
+      "name": "Sayyam Shahid",
+      "email": "sayyamshahid@gmail.com",
+      "phone": "81638127638712",
+      "role": "student",
+      "password": "be1lfccp"
+    },
+    {
+      "id": "317b",
+      "name": "Sayyam Shahid",
+      "email": "sayyamshahid@gmail.com",
+      "phone": "4376467456",
+      "role": "student",
+      "password": null
+    }
+  ]
+}
