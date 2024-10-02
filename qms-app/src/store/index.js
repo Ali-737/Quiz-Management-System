@@ -21,6 +21,7 @@ const store = createStore({
       email: '',
       student_id: '', // Student ID to filter quizzes
     },
+    isAuthenticated: false, // Tracks if the user is authenticated
   },
   mutations: {
     setPendingStudents(state, students) {
@@ -61,13 +62,33 @@ const store = createStore({
     },
     setUser(state, userData) {
       state.user = userData;
+      state.isAuthenticated = true; // Set user as authenticated
+      localStorage.setItem('jwtToken', userData.token); // Store JWT token
     },
     logout(state) {
       state.user = { role: '', name: '', email: '', student_id: '' };
-      localStorage.removeItem('jwtToken');
+      state.isAuthenticated = false; // User is no longer authenticated
+      localStorage.removeItem('jwtToken'); // Remove token from local storage
     },
   },
   actions: {
+    async login({ commit }, credentials) {
+      try {
+        const response = await axios.post('http://192.168.15.67:8000/api/login', credentials);
+        const userData = {
+          role: response.data.data.role,
+          name: response.data.data.name,
+          email: response.data.data.email,
+          token: response.data.data.token,
+          student_id: response.data.data.student_id || '',
+        };
+        commit('setUser', userData); // Store user data and token
+        return response.data;
+      } catch (error) {
+        console.error('Error logging in:', error);
+        throw error;
+      }
+    },
     async fetchPendingStudents({ commit }) {
       try {
         const token = localStorage.getItem('jwtToken');
@@ -110,30 +131,28 @@ const store = createStore({
         const response = await axios.get('http://192.168.15.67:8000/api/managers', {
           headers: { Authorization: `Bearer ${token}` },
         });
-        console.log("Fetched Managers Response:", response.data); // Log the response to check the structure
         const managersData = response.data.data.map(manager => ({
           id: manager.id,
           name: manager.name,
           email: manager.email,
-          role: manager.role || 'Unknown' // Set role to 'Unknown' if it's not present
+          role: manager.role || 'Unknown', // Fallback for missing role
         }));
         commit('setManagers', managersData);
       } catch (error) {
         console.error('Error fetching managers:', error);
         throw error;
       }
-    },    
+    },
 
     async deleteManager({ commit }, managerId) {
       try {
         const token = localStorage.getItem('jwtToken');
         await axios.post(
           'http://192.168.15.67:8000/api/delete-manager',
-          { id: managerId }, // Send the manager id in the data payload
+          { id: managerId },
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        console.log('Manager deleted successfully.');
-        commit('removeManager', managerId); // Remove the manager from the state
+        commit('removeManager', managerId);
       } catch (error) {
         console.error('Error deleting manager:', error);
         throw error;
@@ -260,7 +279,6 @@ const store = createStore({
       }
     },
 
-    // Updated to handle registration for both Manager and Supervisor roles
     async registerManager({ commit }, managerData) {
       try {
         const token = localStorage.getItem('jwtToken');
@@ -344,20 +362,8 @@ const store = createStore({
     assignedQuizzes(state) {
       return state.assignedQuizzes;
     },
-    studentAssignedQuizzes(state) {
-      return state.studentAssignedQuizzes;
-    },
-    pendingQuizzes(state) {
-      return state.pendingQuizzes;
-    },
-    attemptedQuizzes(state) {
-      return state.attemptedQuizzes;
-    },
-    quizResults(state) {
-      return state.quizResults;
-    },
-    quizDetails(state) {
-      return state.quizDetails;
+    isAuthenticated(state) {
+      return state.isAuthenticated;
     },
     userRole(state) {
       return state.user.role;
