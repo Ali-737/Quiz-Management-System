@@ -300,9 +300,11 @@ export default {
     async deleteManager(managerId) {
       try {
         const token = localStorage.getItem('jwtToken');
-        await axios.post('http://192.168.15.67:8000/api/delete-manager', { id: managerId }, {
+        await axios.delete('http://192.168.15.67:8000/api/delete-manager', {
           headers: { Authorization: `Bearer ${token}` },
+          data: { id: managerId }
         });
+        alert('Manager deleted Succesfully.');
         this.refreshManagers();
       } catch (error) {
         console.error('Error deleting manager:', error);
